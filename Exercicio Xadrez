@@ -1,0 +1,147 @@
+#include<stdio.h>
+#include<stdlib.h>
+/* exercicio de exemplo para arranjo e tipos fazer a montagens de um jogo de xadrez mais informações na folha impressa*/
+
+typedef enum TELEMENTO{peao = 1, bispo,cavalo, torre, rainha, rei}Telemento;
+typedef enum TCOR{branco = -1, preto = 1}Tcor;
+
+typedef struct TPECA
+{
+    Telemento elemento;
+    Tcor cor;
+}Tpeca;
+
+typedef struct TJOGO
+{
+    Tpeca tabuleiro[8][8];
+    Tpeca ReinoBranco[16];
+    Tpeca ReinoPreto[16];
+}Tjogo;
+
+void criaJogo(Tjogo*jogo)
+{
+    int i,j;
+    Tpeca peca;
+    peca.elemento = 0;
+    peca.cor = 0;
+
+    for(i = 0; i<8; i++)
+    {
+        for(j = 0; j<8; j++)
+        {
+            (*jogo).tabuleiro[i][j] = peca;
+        }
+    }
+    peca.elemento = peao;
+    for(i = 0 ; i<8; i++)
+    {
+        peca.cor = branco;
+        (*jogo).ReinoBranco[i] = peca;
+        peca.cor = preto;
+        (*jogo).ReinoPreto[i] = peca;
+    }
+    peca.elemento = bispo;
+    for(i = 8; i<10; i++)
+    {
+        peca.cor = branco;
+        (*jogo).ReinoBranco[i] = peca;
+        peca.cor = preto;
+        (*jogo).ReinoPreto[i] = peca;
+    }
+    peca.elemento = cavalo;
+    for(i = 10; i<12; i++)
+    {
+        peca.cor = branco;
+        (*jogo).ReinoBranco[i] = peca;
+        peca.cor = preto;
+        (*jogo).ReinoPreto[i] = peca;
+    }
+    peca.elemento = torre;
+    for(i = 12; i<14; i++)
+    {
+        peca.cor = branco;
+        (*jogo).ReinoBranco[i] = peca;
+        peca.cor = preto;
+        (*jogo).ReinoPreto[i] = peca;
+    }
+    peca.elemento = rainha;
+    for(i = 14; i<15; i++)
+    {
+        peca.cor = branco;
+        (*jogo).ReinoBranco[i] = peca;
+        peca.cor = preto;
+        (*jogo).ReinoPreto[i] = peca;
+    }
+    peca.elemento = rei;
+    for(i = 15; i<16; i++)
+    {
+        peca.cor = branco;
+        (*jogo).ReinoBranco[i] = peca;
+        peca.cor = preto;
+        (*jogo).ReinoPreto[i] = peca;
+    }
+}
+void iniciarJogo(Tjogo *jogo)
+{
+    int i;
+    // Peoes
+    for(i = 0;i<8; i++)
+    {
+        (*jogo).tabuleiro[6][i] = (*jogo).ReinoBranco[i];
+        (*jogo).tabuleiro[1][i] = (*jogo).ReinoPreto[i];
+    }
+    //Bispos
+        (*jogo).tabuleiro[7][2] = (*jogo).ReinoBranco[8];
+        (*jogo).tabuleiro[7][5] = (*jogo).ReinoBranco[9];
+        (*jogo).tabuleiro[0][2] = (*jogo).ReinoPreto[8];
+        (*jogo).tabuleiro[0][5] = (*jogo).ReinoPreto[9];
+    //Cavalos
+        (*jogo).tabuleiro[7][1] = (*jogo).ReinoBranco[10];
+        (*jogo).tabuleiro[7][6] = (*jogo).ReinoBranco[11];
+        (*jogo).tabuleiro[0][1] = (*jogo).ReinoPreto[10];
+        (*jogo).tabuleiro[0][6] = (*jogo).ReinoPreto[11];
+    //Torres
+        (*jogo).tabuleiro[7][0] = (*jogo).ReinoBranco[12];
+        (*jogo).tabuleiro[7][7] = (*jogo).ReinoBranco[13];
+        (*jogo).tabuleiro[0][0] = (*jogo).ReinoPreto[12];
+        (*jogo).tabuleiro[0][7] = (*jogo).ReinoPreto[13];
+    //Rainha
+        (*jogo).tabuleiro[7][3] = (*jogo).ReinoBranco[14];
+        (*jogo).tabuleiro[0][3] = (*jogo).ReinoPreto[14];
+    //Rei
+        (*jogo).tabuleiro[7][4] = (*jogo).ReinoBranco[15];
+        (*jogo).tabuleiro[0][4] = (*jogo).ReinoPreto[15];
+
+    Tpeca peca;
+    peca.elemento = 0;
+    peca.cor = 0;
+    for(i = 0; i<8; i++)
+    {
+        (*jogo).ReinoBranco[i] = peca;
+        (*jogo).ReinoPreto[i] = peca;
+    }
+}
+
+int ValorPeca(Tpeca peca)
+{
+    return(peca.elemento*peca.cor);
+}
+
+void Leitura(Tjogo*jogo)
+{
+    int i,j;
+    //ler as peças do tabuleiro
+    for(i = 0; i<8; i++)
+    {
+        printf("\n");
+        for(j = 0; j<8; j++)
+            printf(" %d ",ValorPeca((*jogo).tabuleiro[i][j]));
+    }
+}
+main()
+{
+    Tjogo jogo;
+    criaJogo(&jogo);
+    iniciarJogo(&jogo);
+    Leitura(&jogo);
+}
