@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-/* Escreva uma função para ordenar um vetor em ordem crescente*/
+/* Escreva uma funÃ§Ã£o para ordenar um vetor em ordem crescente*/
 void EscreverVt(int vt[],int colu)
 {
     for(int i = 0 ; i<colu; i++)
@@ -66,4 +66,6 @@ main()
 
     printf("\nPonteiro em forma crescente:\n");
     EscreverVt(vp,colu);
+    
+    free(vp);
 }
