@@ -1,0 +1,47 @@
+#include<stdio.h>
+#include<stdlib.h>
+/* Escrever uma função para receber uma matriz ponteiro e dar a media aritmetica*/
+float mediaMt (float **mt, int lin, int colu)
+{
+
+}
+main()
+{
+    /* pedindo numero de linhas e colunas e informando espaços vagos
+    e sobre como lidar com espaços adjacentes*/
+    int lin,colu;
+
+    printf("Media Aritmetica");
+    printf("\nInforme um numero inteiro de linhas para a tabela: ");scanf("%d",&lin);
+    printf("\nInforme um numero inteiro de colunas para a tabela: ");scanf("%d",&colu);
+
+    int qtd = lin*colu;
+
+    printf("\nVoce possui %d espacos vagos para os numeros do calculo.\nCaso o numero exceda o necessario digite 'E'.\n",qtd);
+
+    /*preenchendo espaços e lidando com sobras*/
+    int **mt = (float**)malloc(sizeof(float[lin][colu]));
+
+    int i,j;
+    for(i = 0; i<colu; i++)
+    {
+        for(j = 0; j<lin; j++)
+        {
+            printf("\nInforme os Valores a serem calculados: ");scanf("%f",&mt[i][j]);
+            if(mt[i][j] == 'E'|| mt[i][j] == 'e')
+            {
+                printf("Tabela completa Calculando Media");
+                break;
+            }
+            if(qtd != 1)
+            {
+                qtd--;
+                printf("\nQtd de espacos vagos (%d)",qtd);
+            }
+            else
+                if(qtd == 0)
+                    qtd--;
+
+        }
+    }
+}
