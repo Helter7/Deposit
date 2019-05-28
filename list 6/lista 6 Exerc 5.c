@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-/* Escrever uma função para receber uma matriz ponteiro e dar a media aritmetica*/
+/* Escrever uma funÃ§Ã£o para receber uma matriz ponteiro e dar a media aritmetica*/
 float mediaMt (float **mt, int lin, int colu, int div)
 {
     int i,j;
@@ -10,15 +10,15 @@ float mediaMt (float **mt, int lin, int colu, int div)
         for(j = 0; j<lin; j++)
             soma = mt[i][j] + soma;
 
-    //Média
+    //MÃ©dia
     div = (lin*colu)- div;
     soma = soma/div;
     return soma;
 }
-main()
+void main()
 {
-    /* pedindo numero de linhas e colunas e informando espaços vagos
-    e sobre como lidar com espaços adjacentes*/
+    /* pedindo numero de linhas e colunas e informando espaÃ§os vagos
+    e sobre como lidar com espaÃ§os adjacentes*/
     int lin,colu;
 
     printf("Media Aritmetica");
@@ -29,7 +29,7 @@ main()
 
     printf("\nVoce possui %d espacos vagos para os numeros do calculo.\nCaso o numero exceda o necessario digite '0'.\n",qtd);
 
-    /*preenchendo espaços e lidando com sobras*/
+    /*preenchendo espaÃ§os e lidando com sobras*/
     float **mt = (float**)malloc(sizeof(float[lin][colu]));
 
     int i,j;
