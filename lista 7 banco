@@ -1,0 +1,21 @@
+// lista n°7 pag 49
+
+//Exercicio 1
+
+SELECT c.nome,v.data_venda 
+		FROM cliente c JOIN venda v ON(c.id=v.cliente_id) 
+WHERE v.valor_total>(SELECT AVG(valor_total) FROM venda );
+
+//Exercicio 2
+
+SELECT nome,preco_custo FROM produto 
+WHERE preco_custo = (SELECT MAX(preco_custo) FROM produto);
+
+//Exercicio 3
+
+SELECT DISTINCT f.nome,p.estoque
+		FROM fornecedor f JOIN produto p ON(f.id=p.fornecedor_id)
+        			JOIN produto_vendido pv ON(p.id=pv.produto_id)
+  WHERE p.estoque>
+  (SELECT AVG(pv.quantidade) FROM produto_vendido pv JOIN venda v ON(pv.venda_id=v.id)
+   WHERE  YEAR(data_venda) = '2006');
