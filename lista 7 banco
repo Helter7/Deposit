@@ -16,6 +16,14 @@ WHERE preco_custo = (SELECT MAX(preco_custo) FROM produto);
 SELECT DISTINCT f.nome,p.estoque
 		FROM fornecedor f JOIN produto p ON(f.id=p.fornecedor_id)
         			JOIN produto_vendido pv ON(p.id=pv.produto_id)
-  WHERE p.estoque>
-  (SELECT AVG(pv.quantidade) FROM produto_vendido pv JOIN venda v ON(pv.venda_id=v.id)
-   WHERE  YEAR(data_venda) = '2006');
+				JOIN venda v ON(pv.venda_id=v.id)
+  WHERE YEAR(v.data_venda) = '2006' AND p.estoque>(SELECT AVG(estoque) FROM produto_vendido);
+  
+  //Exercicio 4
+  
+ SELECT  ve.nome	
+  		FROM vendedor ve JOIN cliente c ON(c.vendedor_id=ve.id)
+				 JOIN venda v ON(V.cliente_id=c.id)
+ WHERE v.data_venda LIKE '2006%'
+ GROUP BY ve.nome
+ HAVING SUM((v.valor*ve.comissao)/100)>200;
