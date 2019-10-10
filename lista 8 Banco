@@ -1,0 +1,29 @@
+// lista n°8 pag 49
+
+//Exercicio 1
+
+SELECT CONCAT(SUBSTRING(data_cadastro,6,2),'/',SUBSTRING(data_cadastro,1,4)) AS MES_AND, COUNT(*) AS total
+  FROM cliente
+  GROUP BY SUBSTRING(data_cadastro,6,2),SUBSTRING(data_cadastro,1,4)
+  ORDER BY data_cadastro;
+  
+//Exercicio 2
+
+SELECT CONCAT(c.nome,'-',uf.sigla) AS cidade_estado
+FROM fornecedor f JOIN cidade c ON(f.cidade_id=c.id)
+                  JOIN uf ON(c.uf_id=uf.id)
+GROUP BY c.nome,uf.sigla
+HAVING total>1
+ORDER BY total DESC;
+
+
+//Exercicio 3
+
+SELECT SUBSTRING(data_cadastro,1,4) AS and, COUNT(*) AS total
+  FROM cliente
+  GROUP BY YEAR(data_cadastro)
+  
+//Exercicio 4
+
+A) DESCRIBE produto ## ou ## SHOW COLUMNS FROM produto
+B) DROP TABLE produto
