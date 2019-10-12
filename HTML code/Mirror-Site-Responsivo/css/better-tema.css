@@ -1,0 +1,32 @@
+.jumbotron{
+    background-image:url(../img/fundo-rodape.png);
+    background-repeat: cover;
+    background-position: center;
+    color:white;
+}
+.social a[href='http://facebook.com/betterimages']{
+    background: url(../img/facebook.png);
+    background-size: 36px 36px;
+}
+.social a[href='http://twitter.com/betterimages']{
+    background: url(../img/twitter.png);
+    background-size: 36px 36px;
+}
+.social a[href='http://google.com/betterimages']{
+    background: url(../img/googleplus.png);
+    background-size: 36px 36px;
+}
+.social a{
+    display: block;
+    width: 36px;
+    height: 36px;
+    text-indent:-9999px;
+}
+.social li{
+    display: inline-block;
+    margin-left: 1em;
+}
+.fotos{
+    height:310px;
+    width: 300px;
+}
