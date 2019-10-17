@@ -1,0 +1,53 @@
+// Criando tabela uf
+CREATE table uf (
+    id int AUTO_INCREMENT PRIMARY KEY,
+    sigla char(2),											
+	unique index idx_uf(sigla)) ENGINE=INNODB charset=utf8 COLLATE= utf8_unicode_ci;	
+
+
+//Inserindo os estados no campo siglas
+INSERT INTO uf(sigla)
+(SELECT estado as uf FROM fornecedores WHERE estado<>'' AND NOT ( is null))
+UNION
+(SELECT uf FROM clientes WHERE uf<>'' AND NOT(uf is null))
+ORDER BY uf;
+
+//adicionando o campo uf_id na tabela clientes
+ALTER TABLE clientes ADD COLUMN uf_id int;
+
+//verificando se estou pegando as coisas certas
+SELECT uf.id,uf.sigla,c.uf as uf_cliente FROM clientes c JOIN uf ON(uf.sigla=c.uf)
+
+//Adicionando os id de uf em uf_id da tabela cliente
+UPDATE clientes c JOIN uf ON(uf.sigla=c.uf)
+SET c.uf_id=uf.id;
+
+//Deletando a coluna uf da tabela cliente
+ALTER TABLE clientes DROP COLUMN uf;
+
+//criando a tabela cidade
+CREATE TABLE cidade(
+    id int AUTO_INCREMENT PRIMARY KEY,
+    uf_id int,
+    nome varchar(60),
+    UNIQUE INDEX idx_nome(nome))ENGINE=INNODB charset=utf8 COLLATE=utf8_unicode_ci;
+
+//preenchendo o campo uf_id e nome na tabela cidade
+INSERT INTO cidade(uf_id,nome)
+(SELECT uf_id,cidade FROM fornecedores WHERE cidade<>'' AND NOT ( cidade is null) AND uf_id>0)
+UNION
+(SELECT uf_id,cidade FROM clientes WHERE cidade<>'' AND NOT(cidade is null)AND uf_id>0)
+ORDER BY cidade
+
+//adicionando a coluna cidade_id em clientes e fornecedores
+ALTER TABLE clientes ADD COLUMN cidade_id int;
+ALTER TABLE fornecedores ADD COLUMN cidade_id int;
+
+//adicionando os id das cidades em fornecedores e clientes cidade_id
+UPDATE clientes c JOIN cidade ci on(c.cidade=ci.nome) SET c.cidade_id=ci.id;
+UPDATE fornecedores f JOIN cidade ci on(f.cidade=ci.nome) SET f.cidade_id=ci.id;
+
+//deletando as colunas cidade em fornecedores e cliente
+ALTER TABLE clientes DROP COLUMN cidade;
+ALTER TABLE fornecedores DROP COLUMN cidade; 
+
