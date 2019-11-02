@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title> jQuery </title>
+</head>
+<body>
+<h2>jQuery</h2>
+<input type="text" id="busca">
+<select id="limite">
+	<option>10</option>
+	<option>20</option>
+	<option>50</option>
+</select>
+<button>clicar</button>
+
+
+<script src="C:\Users\Aluno\Videos\HelterCR\java\jquery.min.js"></script>
+<script>
+   $(function() {
+      
+		
+      $("button").click(function(){
+	  
+	  var obj
+	  $.get("https://api.mercadolibre.com/sites/MLB/search?limite="+$("#qtd").val()+"?q="+ $("#busca").val())
+	  .done(function(retorno){ 
+			console.log(retorno);
+			$("body").empty
+			$("body").append($("<p/>").html(retorno.query));
+			$("body").append($("<p/>").html(retorno.paging.total));
+			for(var produto of retorno.results){
+				$("body").append($("<p/>").html(produto.permalink));		
+				$("body").append($("<img>").attr("src",produto.thumbnail));
+		   		}		
+	  	})
+	   .fail(function(){
+		    console.log("ERRO!!!")
+		});
+       	  
+      });//fim click 
+	  
+	  $('h2').click( function(){
+	       $("#listPar").empty();
+     	});// fim click h2  
+			   
+   });//fim ready
+</script>
+</body>
+</html> 
