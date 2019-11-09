@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="jquery.min.js"></script>
+</head>
+
+<body>
+    <h2>Renda Per Capita AJAX</h2>
+    <br>
+    <button type="button">exibir</button>
+    <br>
+    Resultado:
+    <script>
+        var url = " https://clienteweb2017.000webhostapp.com/rendapercapita/";
+        $("button").click(function () {
+
+            $.get(url)
+            .done(function(retorno){
+                var obj = JSON.parse(retorno);
+                console.log(obj);
+                var nomes=["sul", "sudeste", "norte", "nordeste", "centro-oeste"];
+                var totalpopulacao=[0,0,0,0,0];
+                var totalPIB=[0,0,0,0,0];
+
+                for(var estado of obj.estados){
+                    let posicao = nomes.indexOf(obj.regiao);
+                    console.log(posicao);
+                    totalpopulacao[posicao]+= estado.posicao;
+                    totalPIB+= estado.PIB;
+                }
+                for(var i = 0; i<nomes.length ;i++){
+                    $("body").append("<p>"+nomes[i]+"</p>");
+                }
+                console.log(nomes);
+                console.log(totalpopulacao);
+                console.log(totalPIB);
+            })
+
+            .fail(function(){ 
+                alert("ERRO!!");
+            });
+        });
+    </script>
+</body>
+
+</html>
