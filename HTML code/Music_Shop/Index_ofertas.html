@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <style>
+        #divForm{display:none;}
+        </style>
+
+    </head>
+    <body>
+        <h2>Hub de Ofertas</h2>
+        <p id="novoCategoria">Nova</p>
+
+        <div id="divForm">
+            <h3>Nova Oferta</h3>
+
+            <form onsubmit="return false;" id="formulario">
+                <input type="hidden" id="formOfertaCodigo">
+                <input type="hidden" id="formVendedor" value="Rock&Pick">
+                <input type="hidden" id="formSenha" value="Rock&Pick">
+                <input type="hidden" id="formEmail" value="Rock&Pick@gmail.com">
+                <input type="hidden" id="frmloja" value="60676H31086A"><br>
+
+                Produto:<input type="text" id="formTitulo" size="50" maxlenght="255"><br>
+                Descrição:<textarea cols="15" rows="7" id="formDescricao" size="50" maxlenght="255"></textarea><br>
+                Valor:<input type="text" id="formValor" size="10" maxlenght="10,2">
+                Quantidade:<input type="text" id="formQtd" size="10">
+                ID Categoria:<input type="text" id="formIdcate" size="10"><br>
+                Imagem Url:<input type="text" id="formImagem" size="50" maxlenght="500"><br>
+                Endereço:<input type="text" id="formEndereco" size="50" maxlenght="255"><br>
+                Complemento:<input type="text" id="formComple" size="50" maxlenght="255"><br>
+                CEP:<input type="text" id="formCep" size="11" maxlenght="10">
+                UF:<input type="text" id="formEstado" size="3" maxlenght="2"><br>
+                Cidade:<input type="text" id="formCidade" size="40" maxlenght="255"><br>
+                Longitude:<input type="text" id="formLong" size="50"><br>
+                Latitude:<input type="text" id="formLat" size="50"><br>
+        
+                <button type="submit" id="incluirAlterarOferta">Nova/Alterar</button>
+            </form>
+
+        </div>
+
+        <section id="ofertas">
+            <table id="lista"></table>
+        </section>
+        
+    <script src='js/jquery.min.js'></script>
+    <script>
+
+        var url ="https://stutz.store/loja/oferta/";
+        var loja = "60676H31086A";
+        var oferta_dados =  {"codCategoria":$("#formIdcate").val(),
+                            "nome":$("#formVendedor").val(),
+                            "email":$("#formEmail").val(),
+                            "senha":$("#formSenha").val(),
+                            "titulo":$("#formTitulo").val(),
+                            "descricao":$("#formDescricao").val(),
+                            "valor":$("#formValor").val(),
+                            "quantidade":$("#formQtd").val(),
+                            "imagem":$("formImagem").val(),
+                            "endereco":$("#formEndereco").val(),
+                            "complemento":$("#formComple").val(),
+                            "cep":$("#formCep").val(),
+                            "estado":$("#formEstado").val(),
+                            "cidade":$("#formCidade").val(),
+                            "longitude":$("#formLong").val(),
+                            "latitude":$("formLat").val(),
+                            "loja":loja};
+        $(function(){
+            buscarOfertas();
+
+            function buscarOfertas(){
+                $.post(url+"getOferta.php",
+                {"loja":loja}
+                
+                ).done(function(data){
+                    var obj = JSON.parse(data)
+                    console.log(data)
+                    montarOfertas(obj);
+                   //$("#divForm").slideup();
+                })
+                .fail(function(){
+                    alert("Falha!!");
+                });
+            }
+            function incluirOferta(){
+                $.post(
+                url+"createOferta.php",
+                oferta_dados
+                )
+             .done(function(data){
+                    console.log(data);
+                    buscarOfertas();
+                })
+                .fail(function(){
+                    alert("Falha!!");
+                });
+            }
+            function alterarOferta(){
+                $.post(
+                    url+"updateOferta.php",
+                    oferta_dados
+                    )
+                .done(function(data){
+                    console.log(data);
+                    buscarOfertas();
+                })
+                .fail(function(){
+                    alert("Falha!!");
+                });
+            }
+            function montarOfertas(data){
+                console.log(data);
+                $("#ofertas").empty();
+
+                $.each(data, function(key,value) {
+                console.log(key,value);
+                $("#ofertas")
+				.append($("<p/>").text(value.titulo))
+                        .append($("<img>").attr("src",value.imagem))
+                            .append($("<p/>").text("R$ "+value.valor))
+				            .append($("<p/>").text(value.descricao))
+				            .append($("<p/>").text("Origem: "+value.estado+", "+value.cidade))
+                            .append($("<p/>").text("---------------------------------------------------------------"));
+                
+                $("#lista")
+                    .append($("<tr />")
+                        .append($("<td />").text(value.codigo))
+                        .append($("<td />").text(value.nome))
+                        .append($("<td />")
+                            .append($("<a />")
+                                .text("EDIT")
+                                .attr("href", "#")
+                                .attr("class", "clseditar")))
+                           .append($("<td />")
+                               .append($("<a />")
+                                   .text("DELETE")
+                                   .attr("href", "#")
+                                   .attr("class", "clsexcluir")))
+                       );
+                });
+
+            }
+            $("body").on("click",".clseditar",function(){
+                   console.log($(this).parent().siblings().eq(0).text());
+                
+                   var codigo = $(this).parent().siblings().eq(0).text();
+                   var nome = $(this).parent().siblings().eq(1).text();
+                            
+                   $("#frmCategoriaCodigo").val(codigo);
+                   $("#frmNome").val(nome);
+                   $("#divForm").slideDown();
+                
+                
+           });
+           $("body").on("click",".clseditar",function(){
+                   console.log($(this).parent().siblings().eq(0).text());
+                
+                   var codigo = $(this).parent().siblings().eq(0).text();
+                   var nome = $(this).parent().siblings().eq(1).text();
+                            
+                   $("#formOfertaCodigo").val(codigo);
+                   $("#formNome").val(nome);
+                   $("#divForm").slideDown();
+                
+                
+           });	
+           $("body").on("click",".clsexcluir",function(){
+           
+               $.post(url+"deleteOferta.php",
+               {"loja":loja,
+                "codigo":$(this).parent().siblings().eq(0).text()}
+               ).done(function(data){
+                   console.log(data);
+                   buscarOferta();
+               })
+               .fail(function(){
+                  alert("falha");
+                });
+            });		
+            $("#incluirAlterarCategoria").click(function(){
+                if ($("#formOfertaCodigo").val() !=""){
+                    alterarOferta();
+                }else{
+                    incluirOferta();
+                }
+            });	
+           
+            $("#novoCategoria").click(function(){
+                    $("#formOfertaCodigo").val("");
+                    $("#formNome").val("");
+              $("#divForm").slideToggle();
+            });
+        });
+
+    </script>
+    </body>
+</html>

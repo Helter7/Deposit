@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src='js/jquery.min.js'></script>
+
+        <style>
+
+            h2{margin-left: 20px;}
+            
+            table{ margin-left: 50px;}
+            
+            th,td{padding: 20px;}
+            
+            #novoCategoria{margin-left: 30px;}
+
+            #divForm{display: none;}
+        </style>
+    </head>
+    <body>
+
+        <h2>Hub de Categorias</h2>
+        <p id="novoCategoria">Nova</p>
+        <div id="divForm">
+            <h3>Nova Categoria</h3>
+            <form onsubmit="return false;" id="formulario">
+                <input type="hidden" id="frmCategoriaCodigo">
+                Nome: <input type="text" id="frmNome"><br>
+                <input type="hidden" id="frmloja" value="60676H31086A"><br>
+                <button type="button" id="incluirAlterarCategoria">Nova/Alterar</button>
+            </form>
+        </div>
+        <table id="lista"></table>
+
+        <script>
+
+       var url =  "https://stutz.store/loja/categoria/";
+       var loja = "60676H31086A";
+                
+       $(function() {
+           buscarDados();
+                    
+           function buscarDados() {
+               $.post(url+"getCategorias.php",
+                        
+               {'loja':loja}
+                        
+               ).done(function(data){
+                   var obj = JSON.parse(data)
+                   montarLinhas(obj.categorias);
+                   $("#divForm").slideUp();
+               })
+               .fail(function(){
+                  alert("falha");
+               });
+                        
+           }  	
+           function incluirDados() {			
+               $.post(url+"createCategoria.php",
+               {"nome":$("#frmNome").val(),
+                "loja":loja}
+                )
+               .done(function(data){
+                   console.log(data);
+                   buscarDados();
+               })
+               .fail(function(){
+                  alert("falha");
+               });		
+           }  	
+        function alterarDados() {			
+               $.post(url+"updateCategoria.php",
+               {"codigo": $("#frmCategoriaCodigo").val(),
+                "nome": $("#frmNome").val(),
+                "loja" :loja}
+               )
+               .done(function(data){
+                   console.log(data);
+                   buscarDados();
+               })
+               .fail(function(){
+                  alert("falha");
+               });		
+           }  	
+           function montarLinhas(data) {
+               $("#lista").empty();
+               $("#lista")
+                       .append($("<tr />")
+                           .append($("<th />").text("ID"))
+                           .append($("<th />").text("NAME"))
+                           .append($("<th />").text("EDIT"))
+                           .append($("<th />").text("DELETE"))
+                       );
+               $.each(data, function(key,value) {
+                   console.log(key,value);
+                   $("#lista")
+                       .append($("<tr />")
+                           .append($("<td />").text(value.codigo))
+                           .append($("<td />").text(value.nome))
+                           .append($("<td />")
+                               .append($("<a />")
+                                   .text("EDIT")
+                                   .attr("href", "#")
+                                   .attr("class", "clseditar")
+                               )
+                           )
+                           .append($("<td />")
+                               .append($("<a />")
+                                   .text("DELETE")
+                                   .attr("href", "#")
+                                   .attr("class", "clsexcluir")
+                               )
+                           )
+                       );		
+               });
+                    
+           }
+           $("body").on("click",".clseditar",function(){
+                   //console.log($(this).parent().siblings().eq(0).text());
+                
+                   var codigo = $(this).parent().siblings().eq(0).text();
+                   var nome = $(this).parent().siblings().eq(1).text();
+                            
+                   $("#frmCategoriaCodigo").val(codigo);
+                   $("#frmNome").val(nome);
+                   $("#divForm").slideDown();
+                
+                
+           });	
+           $("body").on("click",".clsexcluir",function(){
+           
+               $.post(url+"deleteCategoria.php",
+               {"loja":loja,
+                "codigo":$(this).parent().siblings().eq(0).text()}
+               ).done(function(data){
+                   console.log(data);
+                   buscarDados();
+               })
+               .fail(function(){
+                  alert("falha");
+                });
+            });		
+            $("#incluirAlterarCategoria").click(function(){
+                if ($("#frmCategoriaCodigo").val() !=""){
+                    alterarDados();
+                }else{
+                    incluirDados();
+                }
+            });	
+           
+            $("#novoCategoria").click(function(){
+                    $("#frmCategoriaCodigo").val("");
+                    $("#frmNome").val("");
+              $("#divForm").slideToggle();
+            });
+        });
+        </script>
+    </body>
+</html>
